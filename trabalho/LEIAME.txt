@@ -1,0 +1,8 @@
+Observação: o caminho do arquivo csv que sera executado no trabalho.cpp
+é declarado na variavel "CAMINHO_ARQUIVO_CSV" na linha 21 do codigo
+
+Participantes:
+Rodrigo
+Ricardo
+Fabio
+Alexandre
