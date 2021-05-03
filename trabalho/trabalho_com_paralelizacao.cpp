@@ -8,7 +8,6 @@
 #include <iterator>
 #include <map>
 #include <vector>
-#include <windows.h>
 
 #define CAMINHO_ARQUIVO_CSV "dataset_00_1000.csv"
 #define DELIMITER ","
@@ -47,14 +46,10 @@ int main(int argc, char const* argv[]) {
         exit(1);
     }
 
-    // vai criar a subpasta onde vai conter todos os arquivos de resultados
-    cout << "Criando subpasta resultado onde ira armazenar todos os cvs com os resultados\n";
-    system("mkdir resultado");
-
     std::ofstream myfile;
 
     // vai criar o arquivo onde vai ser armazenado o arquivo de entrada (dataset) codificado
-    myfile.open("resultado/dataset_codificado.csv");
+    myfile.open("dataset_codificado.csv");
 
     // salvando no map colunas, todas as colunas do arquivo de entrada e atribuindo um id para cada coluna
     std::getline(arquivo, linha);
@@ -134,7 +129,7 @@ int main(int argc, char const* argv[]) {
             std::ofstream myfile;
 
             // vai criar o arquivo para armazenar as ocorrencias de cada valor em uma determinada coluna
-            myfile.open("resultado/ocorrencias_coluna_" + colunaIterator->second + ".csv");
+            myfile.open("ocorrencias_coluna_" + colunaIterator->second + ".csv");
             myfile << colunaIterator->second << ",OCOR\n";
 
             map<std::string, int>::iterator valoresColunaIterator;
@@ -147,7 +142,7 @@ int main(int argc, char const* argv[]) {
         }
     }
 
-    cout << "Finalizado voce pode encontrar os csv dentro da pasta resultado\n";
+    cout << "Finalizado voce pode encontrar os csv dentro da pasta do projeto\n";
 
     return 0;
 }
