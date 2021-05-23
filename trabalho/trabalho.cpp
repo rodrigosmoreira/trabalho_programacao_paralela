@@ -9,7 +9,7 @@
 #include <map>
 #include <vector>
 
-#define CAMINHO_ARQUIVO_CSV "dataset_00_1000.csv"
+#define CAMINHO_ARQUIVO_CSV "pequeno.csv"
 #define DELIMITER ","
 
 using namespace std;
@@ -25,13 +25,16 @@ int main(int argc, char const* argv[]) {
     map<int, std::string> colunas;
 
     // vai armazenar o id e nome de cada valor de cada coluna do arquivo de entrada
-    std::vector<std::map<std::string, int>> valoresColunasId(3000);
+    std::vector<std::map<std::string, int>> valoresColunasId(50);
 
     // vai armazenar a quantidade de ocorrencias de todos os valores de cada coluna do arquivo de entrada
-    int ocorrenciaValoresColunas[50][1000] = {};
+    //int ocorrenciaValoresColunas[50][1000] = {};
+    vector <int> ocorrenciaValoresColunas[50];
+
 
     // vai armazenar o ultimo id gerado para um valor de cada coluna do arquivo de entrada
-    int idsValoresColuna[3000] = { 0 };
+    int idsValoresColuna[50] = { 0 };
+    //std::vector<int> idsValoresColuna[3000] = { 0 };
 
     // auxiliares
     int idColuna = 0, idValorColuna, indiceLinha = 0, quantidadeLinha, quantidadeColuna;
@@ -67,6 +70,9 @@ int main(int argc, char const* argv[]) {
     }
 
     quantidadeColuna = idColuna;
+    
+
+    cout << "Arquivo dataset_codificado.csv criado\n";
 
     string linhaCodificada;
 
@@ -87,10 +93,10 @@ int main(int argc, char const* argv[]) {
                     #pragma omp critical 
                     {
                         map<std::string, int>::const_iterator pos = valoresColunasId[idColuna].find(celula);
-
                         if (pos == valoresColunasId[idColuna].end()) {
                             valoresColunasId[idColuna].insert(pair<std::string, int>(celula, idsValoresColuna[idColuna]));
                             idValorColuna = idsValoresColuna[idColuna]++;
+                            ocorrenciaValoresColunas[idColuna].push_back(-1);
                         }
                         else {
                             idValorColuna = pos->second;
@@ -99,7 +105,7 @@ int main(int argc, char const* argv[]) {
 
                     // vai incrementar a ocorrencia de um determinado valor em uma determinada ccoluna
                     #pragma omp atomic
-                    ocorrenciaValoresColunas[idColuna][idValorColuna]++;
+                    ocorrenciaValoresColunas[idColuna].push_back(ocorrenciaValoresColunas[idColuna][idValorColuna]++);
 
                     // vai armazena o valor na linha que vai ser salva no arquivo "dataset_codificado.csv"
                     linhaCodificada += std::to_string(idValorColuna);
@@ -117,6 +123,7 @@ int main(int argc, char const* argv[]) {
     quantidadeLinha = indiceLinha;
 
     myfile.close();
+    cout << "Arquivo dataset_codificado.csv criado\n";
     arquivo.close();
 
     // vai imprimir todos os arquivos .csv contendo a ocorrencia dos valores em cada coluna, fazendo isso de forma paralela para cada coluna do arquivo de entrada
@@ -139,10 +146,11 @@ int main(int argc, char const* argv[]) {
             }
 
             myfile.close();
+            cout << "Arquivo ocorrencias_coluna_" + colunaIterator->second + ".csv criado\n";
         }
     }
 
-    cout << "Finalizado voce pode encontrar os csv dentro da pasta do projeto\n";
+    cout << "\nFinalizado voce pode encontrar os csv do resultado dentro da pasta do projeto\n";
 
     return 0;
 }
